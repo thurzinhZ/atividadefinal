@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 10px;">
+        <h2 style="color: #333333;">
+            Olá, <span th:text="${nome}">Usuário</span>!
+        </h2>
+
+        <p style="color: #555555;">Seu cadastro foi realizado com sucesso.</p>
+
+        <p style="color: #555555;">Seus itens:</p>
+        <ul style="color: #555555;">
+            <li th:each="item : ${itens}" th:text="${item}">Item</li>
+        </ul>
+
+        <p style="margin-top: 20px;">
+            <a th:href="${link}" style="display: inline-block; background-color: #0d6efd; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                Teste de link
+            </a>
+        </p>
+    </div>
+</body>
+</html>

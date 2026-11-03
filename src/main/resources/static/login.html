@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Imobiliária</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+        .caixa {
+            max-width: 420px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 0 5px #ccc;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2e7d32;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 12px;
+            background-color: #2e7d32;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1b5e20;
+        }
+        .sair {
+            background-color: #c62828;
+        }
+        #mensagem {
+            margin-top: 12px;
+            text-align: center;
+        }
+        pre {
+            background-color: #eee;
+            padding: 10px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-size: 12px;
+        }
+        .escondido {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Formulário de login -->
+    <div class="caixa" id="telaLogin">
+        <h1>Login</h1>
+        <form id="formLogin">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" required>
+
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" required>
+
+            <button type="submit">Entrar</button>
+        </form>
+        <p id="mensagem"></p>
+    </div>
+
+    <!-- Depois de logado -->
+    <div class="caixa escondido" id="telaLogado">
+        <h2>Bem-vindo!</h2>
+        <p><b>E-mail:</b> <span id="usuarioEmail"></span></p>
+        <p><b>Tipo:</b> <span id="usuarioTipo"></span></p>
+        <p><b>Token:</b></p>
+        <pre id="token"></pre>
+
+        <h2>Testar rotas</h2>
+        <button onclick="testar('GET', '/imoveis')">Listar imóveis (público)</button>
+        <button onclick="testar('POST', '/imoveis', { titulo: 'Imóvel teste', status: 'DISPONIVEL' })">Cadastrar imóvel (só ADMIN)</button>
+        <button onclick="testar('PATCH', '/imoveis/1/status', { status: 'VENDIDO' })">Alterar status do imóvel 1 (logado)</button>
+        <button onclick="testar('GET', '/users')">Listar usuários (só ADMIN)</button>
+
+        <p><b>Resposta:</b></p>
+        <pre id="resposta"></pre>
+
+        <button class="sair" onclick="sair()">Sair</button>
+    </div>
+
+    <script>
+        // quando faz o login, chama a API e guarda o token
+        document.getElementById("formLogin").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const senha = document.getElementById("senha").value;
+
+            const resposta = await fetch("/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email, senha: senha })
+            });
+
+            if (resposta.ok) {
+                const dados = await resposta.json();
+                localStorage.setItem("token", dados.token);
+                localStorage.setItem("email", dados.email);
+                localStorage.setItem("tipo", dados.tipo);
+                mostrarLogado();
+            } else {
+                document.getElementById("mensagem").innerText = "E-mail ou senha inválidos (" + resposta.status + ")";
+                document.getElementById("mensagem").style.color = "red";
+            }
+        });
+
+        // chama uma rota da API mandando o token no header Authorization
+        async function testar(metodo, url, corpo) {
+            const opcoes = {
+                method: metodo,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                }
+            };
+            if (corpo) {
+                opcoes.body = JSON.stringify(corpo);
+            }
+
+            const resposta = await fetch(url, opcoes);
+            const texto = await resposta.text();
+
+            document.getElementById("resposta").innerText =
+                metodo + " " + url + "\nStatus: " + resposta.status + "\n\n" + texto;
+        }
+
+        function mostrarLogado() {
+            document.getElementById("telaLogin").classList.add("escondido");
+            document.getElementById("telaLogado").classList.remove("escondido");
+            document.getElementById("usuarioEmail").innerText = localStorage.getItem("email");
+            document.getElementById("usuarioTipo").innerText = localStorage.getItem("tipo");
+            document.getElementById("token").innerText = localStorage.getItem("token");
+            document.getElementById("resposta").innerText = "";
+        }
+
+        function sair() {
+            localStorage.clear();
+            document.getElementById("telaLogado").classList.add("escondido");
+            document.getElementById("telaLogin").classList.remove("escondido");
+            document.getElementById("mensagem").innerText = "";
+        }
+
+        // se já tiver token salvo, abre direto a tela de logado
+        if (localStorage.getItem("token")) {
+            mostrarLogado();
+        }
+    </script>
+</body>
+</html>
