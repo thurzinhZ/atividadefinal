@@ -1,4 +1,5 @@
 import PropertyGrid from "./property-grid";
+import SiteHeader from "./site-header";
 
 async function getProperties() {
   const apiBaseUrl = (process.env.API_BASE_URL || "http://localhost:8080").replace(/\/$/, "");
@@ -26,17 +27,7 @@ export default async function Home() {
 
   return (
     <main>
-      <header className="site-header">
-        <a className="brand" href="#inicio" aria-label="Casa Clara, início">
-          <span className="brand-symbol" aria-hidden="true">c</span>
-          <span>casa clara</span>
-        </a>
-        <nav className="header-nav" aria-label="Navegação principal">
-          <a href="#inicio">Início</a>
-          <a href="#imoveis">Imóveis</a>
-        </nav>
-        <a className="header-action" href="#imoveis">Explorar imóveis <span aria-hidden="true">↗</span></a>
-      </header>
+      <SiteHeader />
 
       <section className="intro" id="inicio">
         <div>
@@ -52,7 +43,9 @@ export default async function Home() {
             <p className="eyebrow">SELEÇÃO CASA CLARA</p>
             <h2 id="catalog-title">Imóveis disponíveis</h2>
           </div>
-          <span className="catalog-count">{properties.length.toString().padStart(2, "0")} anúncios</span>
+          <span className="catalog-count" aria-live="polite">
+            {properties.length.toString().padStart(2, "0")} anúncios
+          </span>
         </div>
         <PropertyGrid properties={properties} error={error} />
       </section>

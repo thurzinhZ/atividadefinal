@@ -1,4 +1,5 @@
 import "./globals.css";
+import { AuthProvider } from "./auth-provider";
 
 export const metadata = {
   title: "Casa Clara | Imóveis",
@@ -8,7 +9,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
