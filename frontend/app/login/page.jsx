@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../auth-provider";
 import SiteHeader from "../site-header";
+import { rotaInicial } from "../../lib/regras";
 
 function LoginPageContent() {
   const { login, ready, session } = useAuth();
@@ -17,7 +18,7 @@ function LoginPageContent() {
 
   useEffect(() => {
     if (ready && session) {
-      router.replace(session.tipo === "ADMIN" ? "/painel" : "/area-cliente");
+      router.replace(rotaInicial(session.tipo));
     }
   }, [ready, session, router]);
 
@@ -27,7 +28,7 @@ function LoginPageContent() {
     setSubmitting(true);
     try {
       const authenticatedSession = await login(email.trim(), senha);
-      router.replace(authenticatedSession.tipo === "ADMIN" ? "/painel" : "/area-cliente");
+      router.replace(rotaInicial(authenticatedSession.tipo));
     } catch (loginError) {
       setError(loginError.message);
     } finally {
@@ -74,6 +75,14 @@ function LoginPageContent() {
               {submitting ? "Entrando..." : "Entrar"}
             </button>
           </form>
+          <details className="contas-teste">
+            <summary>Contas de teste (senha 123)</summary>
+            <ul>
+              <li><strong>Cliente:</strong> user@email.com</li>
+              <li><strong>Corretor:</strong> corretor@email.com</li>
+              <li><strong>Administrador:</strong> admin@email.com</li>
+            </ul>
+          </details>
           <p className="auth-footer">Ainda não tem uma conta? <Link href="/#imoveis">Explore os imóveis</Link></p>
         </div>
       </section>

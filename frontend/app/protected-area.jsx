@@ -4,10 +4,14 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "./auth-provider";
 import SiteHeader from "./site-header";
+import { rotaInicial } from "../lib/regras";
 
+// requiredRole: um perfil ("ADMIN") ou uma lista (["USER", "CORRETOR"])
 export default function ProtectedArea({ requiredRole, children }) {
   const { session, ready } = useAuth();
   const router = useRouter();
+  const perfis = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+  const permitido = Boolean(session && perfis.includes(session.tipo));
 
   useEffect(() => {
     if (!ready) return;
@@ -15,12 +19,10 @@ export default function ProtectedArea({ requiredRole, children }) {
       router.replace("/login");
       return;
     }
-    if (session.tipo !== requiredRole) {
-      router.replace(session.tipo === "ADMIN" ? "/painel" : "/area-cliente");
-    }
-  }, [ready, requiredRole, router, session]);
+    if (!permitido) router.replace(rotaInicial(session.tipo));
+  }, [ready, router, session, permitido]);
 
-  if (!ready || !session || session.tipo !== requiredRole) {
+  if (!ready || !permitido) {
     return (
       <main>
         <SiteHeader />

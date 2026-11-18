@@ -47,6 +47,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 // Listar imóveis / um imóvel -> todos, sem token
                 .requestMatchers(HttpMethod.GET, "/imoveis", "/imoveis/**").permitAll()
+                // Tipos e bairros -> leitura pública (alimentam os filtros da vitrine)
+                .requestMatchers(HttpMethod.GET, "/tipos-imoveis", "/tipos-imoveis/**", "/bairros", "/bairros/**").permitAll()
                 // Alterar status de imóvel -> qualquer usuário autenticado
                 .requestMatchers(HttpMethod.PATCH, "/imoveis/*/status").authenticated()
                 // Cadastrar, alterar e remover imóveis -> só ADMIN

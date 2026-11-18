@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.demo.DTOs.ImovelFiltroDTO;
+import com.example.demo.DTOs.PaginaDTO;
 import com.example.demo.DTOs.StatusDTO;
 import com.example.demo.models.ImovelModel;
 import com.example.demo.services.ImovelService;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -35,6 +39,25 @@ public class ImovelController {
     public ResponseEntity<List<ImovelModel>> getAll() {
         List<ImovelModel> list = service.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(list);
+    }
+
+    // Busca com filtros e paginação feitos no banco. Exemplo:
+    // GET /imoveis/busca?q=centro&finalidade=VENDA&precoMax=500000&dormitoriosMin=2&page=0&size=6&ordem=menor-preco
+    @GetMapping("/busca")
+    public ResponseEntity<PaginaDTO<ImovelModel>> buscar(
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) String finalidade,
+            @RequestParam(required = false) Integer tipoId,
+            @RequestParam(required = false) Integer bairroId,
+            @RequestParam(required = false) BigDecimal precoMin,
+            @RequestParam(required = false) BigDecimal precoMax,
+            @RequestParam(required = false) Integer dormitoriosMin,
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size,
+            @RequestParam(defaultValue = "destaque") String ordem) {
+        ImovelFiltroDTO filtro = new ImovelFiltroDTO(q, finalidade, tipoId, bairroId, precoMin, precoMax, dormitoriosMin, status);
+        return ResponseEntity.ok(service.buscar(filtro, page, size, ordem));
     }
 
     @GetMapping(value = "/{id}")

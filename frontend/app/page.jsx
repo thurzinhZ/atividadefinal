@@ -1,30 +1,7 @@
 import PropertyGrid from "./property-grid";
 import SiteHeader from "./site-header";
 
-async function getProperties() {
-  const apiBaseUrl = (process.env.API_BASE_URL || "http://localhost:8080").replace(/\/$/, "");
-
-  try {
-    const response = await fetch(`${apiBaseUrl}/imoveis`, { cache: "no-store" });
-    if (!response.ok) {
-      return { properties: [], error: `A API respondeu com o erro ${response.status}.` };
-    }
-
-    const properties = await response.json();
-    return Array.isArray(properties)
-      ? { properties, error: null }
-      : { properties: [], error: "A resposta da API não contém uma lista de imóveis." };
-  } catch {
-    return {
-      properties: [],
-      error: "Não foi possível conectar à API. Verifique se o backend está rodando em http://localhost:8080.",
-    };
-  }
-}
-
-export default async function Home() {
-  const { properties, error } = await getProperties();
-
+export default function Home() {
   return (
     <main>
       <SiteHeader />
@@ -38,16 +15,7 @@ export default async function Home() {
       </section>
 
       <section className="catalog" id="imoveis" aria-labelledby="catalog-title">
-        <div className="catalog-heading">
-          <div>
-            <p className="eyebrow">SELEÇÃO CASA CLARA</p>
-            <h2 id="catalog-title">Imóveis disponíveis</h2>
-          </div>
-          <span className="catalog-count" aria-live="polite">
-            {properties.length.toString().padStart(2, "0")} anúncios
-          </span>
-        </div>
-        <PropertyGrid properties={properties} error={error} />
+        <PropertyGrid />
       </section>
 
       <footer className="site-footer">

@@ -1,6 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { lerErro } from "../lib/api";
+import { PERFIS, normalizarPerfil } from "../lib/regras";
 
 const AuthContext = createContext(null);
 const STORAGE_KEY = "casa-clara-session";
@@ -96,9 +98,9 @@ export function AuthProvider({ children }) {
     const nextSession = {
       token: data.token,
       email: data.email || email,
-      tipo: String(data.tipo || "").replace(/^ROLE_/, "").toUpperCase(),
+      tipo: normalizarPerfil(data.tipo),
     };
-    if (!["ADMIN", "USER"].includes(nextSession.tipo)) {
+    if (!PERFIS.includes(nextSession.tipo)) {
       throw new Error("O servidor retornou um perfil de acesso inválido.");
     }
     window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(nextSession));
@@ -114,18 +116,40 @@ export function AuthProvider({ children }) {
 
     const headers = new Headers(options.headers);
     headers.set("Authorization", `Bearer ${session.token}`);
-    const response = await fetch(`/backend-api${path}`, { ...options, headers });
+    let response;
+    try {
+      response = await fetch(`/backend-api${path}`, { ...options, headers });
+    } catch (error) {
+      if (error?.name === "AbortError") throw error;
+      throw new Error("Não foi possível conectar ao servidor. Verifique se o backend está rodando.");
+    }
     if (response.status === 401) {
       logout(true, true);
       throw new Error("Sua sessão expirou. Entre novamente.");
     }
-    if (response.status === 403) throw new Error("Seu perfil não tem permissão para esta ação.");
+    if (response.status === 403) {
+      throw new Error(await lerErro(response, "Seu perfil não tem permissão para esta ação."));
+    }
     return response;
   }, [logout, session]);
 
+  // Envia/recebe JSON e transforma respostas de erro em Error com a mensagem do backend
+  const apiJson = useCallback(async (path, { body, method = body ? "POST" : "GET", signal } = {}) => {
+    const response = await apiFetch(path, {
+      method,
+      signal,
+      headers: body !== undefined ? { "Content-Type": "application/json" } : undefined,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+    if (!response.ok) throw new Error(await lerErro(response, `A API respondeu com o erro ${response.status}.`));
+    if (response.status === 204) return null;
+    const text = await response.text();
+    return text ? JSON.parse(text) : null;
+  }, [apiFetch]);
+
   const value = useMemo(
-    () => ({ session, ready, login, logout, apiFetch }),
-    [session, ready, login, logout, apiFetch],
+    () => ({ session, ready, login, logout, apiFetch, apiJson }),
+    [session, ready, login, logout, apiFetch, apiJson],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

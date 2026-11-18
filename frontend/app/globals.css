@@ -215,3 +215,167 @@ h1, h2, h3, p { margin-top: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
 }
+/* ===================== Aula 3: perfis, ofertas, contratos e painéis ===================== */
+.dashboard { padding-top: 56px; }
+textarea, select { font: inherit; }
+.muted { color: var(--muted); }
+.header-perfil { margin-right: 4px; padding: 3px 7px; border-radius: 3px; background: var(--mint); color: var(--green-deep); font-weight: 600; }
+
+/* botões e mensagens */
+.secondary-button { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; padding: 0 14px; border: 1px solid var(--line); border-radius: 4px; background: white; color: var(--green); cursor: pointer; font-size: 12px; font-weight: 600; }
+.secondary-button:hover { border-color: var(--green); }
+.secondary-button:disabled { opacity: .6; cursor: wait; }
+.secondary-button.perigo { color: #a34f32; }
+.secondary-button.perigo:hover { border-color: #a34f32; }
+.primary-button.perigo { background: #a34f32; }
+.primary-button.perigo:hover { background: #7f3a24; }
+.notice .secondary-button { margin-top: 12px; }
+.mensagem { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 18px; padding: 11px 14px; border-radius: 4px; font-size: 13px; line-height: 1.5; }
+.mensagem-sucesso { background: var(--mint); color: var(--green-deep); }
+.mensagem-erro { background: #fbede6; color: #8d3c25; }
+.mensagem button { border: 0; background: transparent; color: inherit; cursor: pointer; font-size: 18px; line-height: 1; }
+.campo-erro { margin: 2px 0 0; color: #8d3c25; font-size: 12px; }
+.campo-ajuda { margin: 2px 0 0; color: var(--muted); font-size: 11px; }
+
+/* estados de carregamento */
+.estado-carregando { padding: 28px 0; }
+.skeleton-linha { height: 12px; display: block; margin: 0 0 10px; border-radius: 3px; background: linear-gradient(90deg, #eef2ef 0%, #f7f9f6 50%, #eef2ef 100%); background-size: 200% 100%; animation: brilho 1.2s ease-in-out infinite; }
+.skeleton-linha:nth-child(2) { width: 82%; }
+.skeleton-linha:nth-child(3), .skeleton-linha.curta { width: 58%; }
+.estado-texto { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
+.skeleton-card .property-photo { animation: brilho 1.2s ease-in-out infinite; background: linear-gradient(90deg, #eef2ef 0%, #f7f9f6 50%, #eef2ef 100%); background-size: 200% 100%; }
+.skeleton-card:hover { transform: none; box-shadow: none; }
+.recarregando .property-grid { opacity: .55; transition: opacity 150ms ease; }
+@keyframes brilho { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+
+/* badges de status (sempre com texto, nunca só cor) */
+.status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.status-badge::before { width: 6px; height: 6px; border-radius: 50%; background: currentColor; content: ""; }
+.status-sucesso { background: #e5f2ea; color: #1d5a3f; }
+.status-aviso { background: #fbf1dc; color: #7a5300; }
+.status-erro { background: #fbe9e4; color: #8d3c25; }
+.status-info { background: #e6eef9; color: #1f4f8a; }
+.status-neutro { background: #eef0ee; color: #4f5a55; }
+.property-status { position: absolute; top: 13px; right: 13px; }
+
+/* abas */
+.abas { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 26px; border-bottom: 1px solid var(--line); }
+.aba { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 12px 14px; border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 13px; font-weight: 600; }
+.aba:hover { color: var(--green); }
+.aba.ativa { color: var(--green-deep); }
+.aba.ativa::after { position: absolute; right: 10px; bottom: -1px; left: 10px; height: 2px; background: var(--green); content: ""; }
+.aba-contador { min-width: 20px; padding: 2px 6px; border-radius: 999px; background: var(--accent); color: white; font-size: 10px; text-align: center; }
+
+/* indicadores e gráficos */
+.indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin: 0 0 22px; }
+.indicador { padding: 16px 18px; border: 1px solid var(--line); border-radius: 6px; background: white; }
+.indicador dt { color: var(--muted); font-size: 12px; }
+.indicador dd { margin: 6px 0 0; color: var(--ink); font-family: "Playfair Display", Georgia, serif; font-size: 30px; }
+.indicador.destaque { border-color: var(--accent); background: #fdf6f2; }
+.indicador-dica { color: var(--muted); font-size: 11px; }
+.graficos-grade { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.grafico-cartao { min-width: 0; margin: 0; padding: 18px 18px 12px; border: 1px solid var(--line); border-radius: 6px; background: white; }
+.grafico-cartao figcaption { display: flex; flex-direction: column; gap: 3px; margin-bottom: 14px; }
+.grafico-cartao figcaption strong { font-size: 14px; }
+.grafico-cartao figcaption span { color: var(--muted); font-size: 12px; }
+.grafico-area { width: 100%; }
+.grafico-vazio { min-height: 120px; display: grid; place-items: center; margin: 0; color: var(--muted); font-size: 12px; }
+.grafico-dica { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: white; box-shadow: 0 6px 18px rgb(29 43 40 / 10%); font-size: 12px; }
+.grafico-dica span { color: var(--muted); }
+.grafico-tabela { margin-top: 8px; font-size: 12px; }
+.grafico-tabela summary { color: var(--green); cursor: pointer; font-weight: 600; }
+.grafico-tabela table, .tabela { width: 100%; margin-top: 8px; border-collapse: collapse; }
+.grafico-tabela th, .grafico-tabela td, .tabela th, .tabela td { padding: 7px 8px; border-bottom: 1px solid var(--line); text-align: left; }
+.tabela { margin-top: 22px; font-size: 13px; }
+.tabela th { color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .4px; text-transform: uppercase; }
+
+/* cartões de ofertas e contratos */
+.item-lista { display: flex; flex-direction: column; gap: 16px; }
+.item-card { padding: 20px 22px; border: 1px solid var(--line); border-radius: 6px; background: white; }
+.item-card-topo { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.item-card-topo h3 { margin: 0; font-size: 17px; font-weight: 600; }
+.item-card-topo h3 a:hover { color: var(--green); }
+.item-card-sub { margin: 0 0 5px; color: var(--muted); font-size: 11px; }
+.item-card-dados { display: flex; flex-wrap: wrap; gap: 10px 32px; margin: 16px 0 0; }
+.item-card-dados dt { color: var(--muted); font-size: 11px; }
+.item-card-dados dd { margin: 3px 0 0; font-size: 14px; font-weight: 600; }
+.item-card-texto { margin: 14px 0 0; color: #58665f; font-size: 13px; line-height: 1.6; }
+.item-card-resposta { margin: 14px 0 0; padding: 10px 12px; border-radius: 4px; background: var(--canvas); color: #4c5a53; font-size: 13px; line-height: 1.6; }
+.item-card-resposta.erro { background: #fbede6; color: #8d3c25; }
+.item-card-resposta.sucesso { background: var(--mint); color: var(--green-deep); }
+.item-card-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.codigo { font-family: ui-monospace, Menlo, monospace; font-size: 11px; overflow-wrap: anywhere; }
+.contrato-condicoes { margin-top: 14px; font-size: 13px; }
+.contrato-condicoes summary { color: var(--green); cursor: pointer; font-weight: 600; }
+.contrato-condicoes p { margin: 8px 0 0; color: #58665f; line-height: 1.7; white-space: pre-line; }
+.form-inline-card { display: flex; flex-direction: column; gap: 7px; margin-top: 18px; padding: 16px; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+.form-inline-card h4 { margin: 0 0 6px; font-size: 14px; }
+.form-inline-card label, .oferta-box label { margin-top: 6px; font-size: 12px; font-weight: 600; }
+.form-inline-card input, .form-inline-card select, .form-inline-card textarea,
+.oferta-box input, .oferta-box textarea { width: 100%; min-height: 40px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 4px; background: white; color: var(--ink); font-size: 13px; }
+.form-inline-card :is(input, select, textarea):focus, .oferta-box :is(input, textarea):focus { outline: 2px solid rgb(36 92 75 / 25%); border-color: var(--green); }
+.form-inline-card [aria-invalid="true"], .oferta-box [aria-invalid="true"] { border-color: #c06a4c; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 4px 14px; }
+.form-grid > div { display: flex; flex-direction: column; gap: 6px; }
+.form-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.checkbox { display: flex; align-items: flex-start; gap: 9px; font-weight: 400 !important; line-height: 1.5; cursor: pointer; }
+.checkbox input { width: auto !important; min-height: 0 !important; margin-top: 3px; }
+.filtro-lista { margin: 0 0 16px; color: var(--muted); font-size: 13px; }
+
+/* linha do tempo do contrato */
+.linha-tempo { display: grid; grid-template-columns: repeat(5, 1fr); margin: 18px 0 4px; padding: 0; list-style: none; }
+.etapa { position: relative; display: flex; flex-direction: column; align-items: center; gap: 7px; color: var(--muted); font-size: 11px; text-align: center; }
+.etapa::before { position: absolute; top: 5px; right: 50%; left: -50%; height: 2px; background: var(--line); content: ""; }
+.etapa:first-child::before { display: none; }
+.etapa-ponto { position: relative; z-index: 1; width: 12px; height: 12px; border: 2px solid var(--line); border-radius: 50%; background: white; }
+.etapa-feita { color: var(--green-deep); }
+.etapa-feita::before, .etapa-atual::before, .etapa-reprovada::before { background: var(--green); }
+.etapa-feita .etapa-ponto { border-color: var(--green); background: var(--green); }
+.etapa-atual { color: var(--ink); font-weight: 600; }
+.etapa-atual .etapa-ponto { border-color: var(--green); box-shadow: 0 0 0 4px rgb(36 92 75 / 15%); }
+.etapa-reprovada { color: #8d3c25; font-weight: 600; }
+.etapa-reprovada .etapa-ponto { border-color: #a34f32; background: #a34f32; }
+
+/* vitrine: favoritos e filtros */
+.property-card { position: relative; }
+.botao-favorito { position: absolute; top: 48px; right: 13px; z-index: 2; width: 34px; height: 34px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgb(255 255 255 / 92%); color: #a34f32; cursor: pointer; font-size: 17px; box-shadow: 0 2px 8px rgb(29 43 40 / 15%); }
+.botao-favorito:hover { transform: scale(1.06); }
+.botao-favorito.ativo { background: #a34f32; color: white; }
+.botao-favorito.grande { position: static; width: auto; height: 34px; display: inline-flex; gap: 7px; padding: 0 13px; border: 1px solid var(--line); border-radius: 4px; box-shadow: none; font-size: 13px; font-weight: 600; }
+.botao-favorito.grande.ativo { border-color: #a34f32; }
+.filter-toggle { min-height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: 4px; background: white; color: var(--green); cursor: pointer; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.filtros-avancados { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+.filtros-avancados label { display: flex; flex-direction: column; gap: 5px; color: var(--muted); font-size: 11px; font-weight: 600; }
+.filtros-avancados select, .filtros-avancados input { min-height: 36px; padding: 0 9px; border: 1px solid var(--line); border-radius: 4px; background: white; color: var(--ink); font-size: 12px; }
+.filtros-erro { grid-column: 1 / -1; }
+.empty-state .secondary-button, .empty-state .primary-button { margin-top: 16px; }
+
+/* detalhe do imóvel e oferta */
+.detalhe-status { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 14px 0 0; }
+.detalhe-favorito { display: inline-flex; flex-direction: column; }
+.oferta-box { display: flex; flex-direction: column; gap: 6px; margin: 24px 0 0; padding: 20px; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+.oferta-box h2 { margin: 0; font-family: "Playfair Display", Georgia, serif; font-size: 22px; font-weight: 500; }
+.oferta-box .primary-button { margin-top: 10px; }
+.oferta-ajuda { margin: 0 0 4px; color: var(--muted); font-size: 12px; }
+.oferta-aviso { margin: 24px 0 0; padding: 14px 16px; border-radius: 4px; background: var(--canvas); color: #58665f; font-size: 13px; line-height: 1.6; }
+.contato-link { display: inline-block; margin-top: 16px; font-size: 12px; }
+
+/* login e perfil */
+.contas-teste { margin-top: 18px; color: var(--muted); font-size: 12px; }
+.contas-teste summary { cursor: pointer; font-weight: 600; }
+.contas-teste ul { margin: 8px 0 0; padding-left: 18px; line-height: 1.8; }
+.perfil-form { max-width: 440px; }
+
+@media (max-width: 800px) {
+  .graficos-grade { grid-template-columns: minmax(0, 1fr); }
+  .listing-controls { flex-wrap: wrap; }
+}
+@media (max-width: 560px) {
+  .item-card { padding: 16px; }
+  .item-card-topo { flex-direction: column; }
+  .linha-tempo { grid-template-columns: repeat(5, minmax(0, 1fr)); font-size: 10px; }
+  .etapa { font-size: 9px; }
+  .abas { flex-wrap: nowrap; overflow-x: auto; }
+  .aba { white-space: nowrap; }
+  .header-nav { flex-wrap: wrap; }
+}

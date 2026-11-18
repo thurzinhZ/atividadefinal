@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteHeader from "../../site-header";
+import OfertaForm from "../../_components/oferta-form";
+import ImovelFavorito from "../../_components/imovel-acoes";
+import StatusBadge from "../../_components/status-badge";
+import { STATUS_IMOVEL, statusImovel } from "../../../lib/regras";
 
 const photos = [
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=85",
@@ -80,6 +84,10 @@ export default async function PropertyDetailsPage({ params }) {
           <div className="detail-content">
             <p className="eyebrow">{getLocation(property) || "LOCALIZAÇÃO NÃO INFORMADA"}</p>
             <h1>{property.titulo || property.tipoImovel?.nome || "Imóvel"}</h1>
+            <div className="detalhe-status">
+              <StatusBadge mapa={STATUS_IMOVEL} status={statusImovel(property.status)} />
+              <ImovelFavorito imovelId={property.id} titulo={property.titulo || "este imóvel"} />
+            </div>
             <p className="detail-price">{formatPrice(price)}{purpose === "ALUGUEL" && <span> / mês</span>}</p>
             {features.length > 0 && (
               <ul className="detail-features">
@@ -92,8 +100,9 @@ export default async function PropertyDetailsPage({ params }) {
                 {[property.endereco, property.numero, property.complemento, property.cep].filter(Boolean).join(", ")}
               </p>
             )}
-            <a className="primary-button dashboard-link" href={`mailto:${contactEmail}?subject=${subject}&body=${body}`}>
-              Tenho interesse neste imóvel
+            <OfertaForm imovel={{ id: property.id, status: property.status }} precoAnunciado={price} />
+            <a className="text-link contato-link" href={`mailto:${contactEmail}?subject=${subject}&body=${body}`}>
+              Prefere conversar antes? Fale com a equipe por e-mail →
             </a>
           </div>
         </div>

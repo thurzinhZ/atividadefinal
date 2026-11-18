@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useAuth } from "./auth-provider";
+import { ROTULO_PERFIL, rotaInicial } from "../lib/regras";
+
+const ROTULO_AREA = { ADMIN: "Painel", CORRETOR: "Área do corretor", USER: "Minha área" };
 
 export default function SiteHeader() {
   const { session, ready, logout } = useAuth();
-  const isAdmin = session?.tipo === "ADMIN";
 
   return (
     <header className="site-header">
@@ -16,15 +18,14 @@ export default function SiteHeader() {
       <nav className="header-nav" aria-label="Navegação principal">
         <Link href="/">Início</Link>
         <Link href="/#imoveis">Imóveis</Link>
-        {ready && session && (
-          <Link href={isAdmin ? "/painel" : "/area-cliente"}>
-            {isAdmin ? "Painel" : "Minha área"}
-          </Link>
-        )}
+        {ready && session && <Link href={rotaInicial(session.tipo)}>{ROTULO_AREA[session.tipo]}</Link>}
+        {ready && session && <Link href="/perfil">Meu perfil</Link>}
       </nav>
       {ready && session ? (
         <div className="header-account">
-          <span className="header-user">{isAdmin ? "Administrador" : session.email}</span>
+          <span className="header-user">
+            <span className="header-perfil">{ROTULO_PERFIL[session.tipo]}</span> {session.email}
+          </span>
           <button className="header-action" type="button" onClick={() => logout()}>
             Sair <span aria-hidden="true">↗</span>
           </button>

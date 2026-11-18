@@ -29,6 +29,8 @@ public class BairroModel implements Serializable{
 
     private String cepInicial;
 
+    private String cepFinal;
+
     public BairroModel(){};
 
     public BairroModel(Integer id, String nome, String cidade, String estado, String cepInicial){
